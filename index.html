@@ -53,10 +53,44 @@
     button:hover {
       background: #2563eb;
     }
+    .hidden {
+      display: none;
+    }
+    .auth-container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      min-width: 320px;
+    }
+    .logout-btn {
+      background: #dc2626;
+      margin-top: 1rem;
+    }
+    .logout-btn:hover {
+      background: #b91c1c;
+    }
   </style>
+  <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="adibosibot" data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+<script type="text/javascript">
+  function onTelegramAuth(user) {
+    alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+  }
+</script>
 </head>
 <body>
-  <div class="container">
+  <div id="authContainer" class="auth-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="mainContainer" class="container hidden">
     <h2>GIMME DATA</h2>
     <form id="webhookForm">
       <label for="url">Webhook URL</label>
@@ -65,8 +99,49 @@
       <input type="password" id="pin" name="pin" placeholder="Enter PIN" required />
       <button type="submit">Trigger</button>
     </form>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
   </div>
   <script>
+    // Basic authentication credentials (in real app, this would be on server)
+    const AUTH_USERNAME = 'admin';
+    const AUTH_PASSWORD = 'password123';
+
+    // Check if user is already logged in
+    if (localStorage.getItem('isAuthenticated') === 'true') {
+      showMainContainer();
+    }
+
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === AUTH_USERNAME && password === AUTH_PASSWORD) {
+        localStorage.setItem('isAuthenticated', 'true');
+        showMainContainer();
+      } else {
+        alert('Invalid username or password!');
+      }
+    });
+
+    // Logout button handler
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('isAuthenticated');
+      showAuthContainer();
+    });
+
+    function showMainContainer() {
+      document.getElementById('authContainer').classList.add('hidden');
+      document.getElementById('mainContainer').classList.remove('hidden');
+    }
+
+    function showAuthContainer() {
+      document.getElementById('mainContainer').classList.add('hidden');
+      document.getElementById('authContainer').classList.remove('hidden');
+    }
+
+    // Webhook form handler
     document.getElementById('webhookForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const url = document.getElementById('url').value;
