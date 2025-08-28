@@ -67,11 +67,27 @@
     </form>
   </div>
   <script>
-    document.getElementById('webhookForm').addEventListener('submit', function(e) {
+    document.getElementById('webhookForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const url = document.getElementById('url').value;
       const pin = document.getElementById('pin').value;
-      alert(`URL: ${url}\nPIN: ${pin}`); // For now, just show the input values
+      const webhookEndpoint = 'https://primary-production-7003.up.railway.app/webhook-test/social-content';
+      try {
+        const response = await fetch(webhookEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url, pin })
+        });
+        if (response.ok) {
+          alert('Webhook triggered successfully!');
+        } else {
+          alert('Failed to trigger webhook.');
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
     });
   </script>
 </body>
