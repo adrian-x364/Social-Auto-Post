@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook Trigger Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      min-width: 320px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #2d3748;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #4a5568;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #3182ce;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>GIMME DATA</h2>
+    <form id="webhookForm">
+      <label for="url">Webhook URL</label>
+      <input type="text" id="url" name="url" placeholder="Enter webhook URL" required />
+      <label for="pin">PIN</label>
+      <input type="password" id="pin" name="pin" placeholder="Enter PIN" required />
+      <button type="submit">Trigger</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('webhookForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const url = document.getElementById('url').value;
+      const pin = document.getElementById('pin').value;
+      alert(`URL: ${url}\nPIN: ${pin}`); // For now, just show the input values
+    });
+  </script>
+</body>
+</html>
