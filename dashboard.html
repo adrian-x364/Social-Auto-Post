@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Social Auto Post</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .welcome-text {
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      background: #dc2626;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+    }
+
+    .main-content {
+      max-width: 800px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.5rem;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .dashboard-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="url"] {
+      width: 100%;
+      padding: 0.875rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="url"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .trigger-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .trigger-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .trigger-btn:disabled {
+      background: #a0aec0;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status-message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status-success {
+      background: #f0fff4;
+      color: #38a169;
+      border: 1px solid #c6f6d5;
+    }
+
+    .status-error {
+      background: #fed7d7;
+      color: #c53030;
+      border: 1px solid #feb2b2;
+    }
+
+    .status-loading {
+      background: #ebf8ff;
+      color: #3182ce;
+      border: 1px solid #bee3f8;
+    }
+
+    .info-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .info-list {
+      list-style: none;
+    }
+
+    .info-list li {
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .info-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #90cdf4;
+      font-weight: bold;
+    }
+
+    .recent-activity {
+      margin-top: 2rem;
+    }
+
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #f7fafc;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      border-left: 4px solid #667eea;
+    }
+
+    .activity-time {
+      color: #666;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .main-content {
+        padding: 0 1rem;
+        margin: 2rem auto;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">Social Auto Post</div>
+      <div class="user-info">
+        <span class="welcome-text" id="welcomeText">Welcome back!</span>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="dashboard-header">
+      <h1>Dashboard</h1>
+      <p>Manage your social media automation and webhook configurations</p>
+    </div>
+
+    <div class="info-section">
+      <h3>🚀 What you can do here:</h3>
+      <ul class="info-list">
+        <li>Configure webhook URLs for automated content delivery</li>
+        <li>Secure your webhooks with PIN authentication</li>
+        <li>Monitor webhook trigger activity</li>
+        <li>Manage your social media automation settings</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2><span class="card-icon">🔗</span> Webhook Configuration</h2>
+      <form id="webhookForm">
+        <div class="form-group">
+          <label for="url">Webhook URL</label>
+          <input type="url" id="url" name="url" placeholder="https://example.com/webhook" required />
+          <small style="color: #666; font-size: 0.875rem;">Enter the webhook URL where you want to receive social content data</small>
+        </div>
+
+        <div class="form-group">
+          <label for="pin">Security PIN</label>
+          <input type="password" id="pin" name="pin" placeholder="Enter your secure PIN" required />
+          <small style="color: #666; font-size: 0.875rem;">This PIN will be sent with the webhook for verification</small>
+        </div>
+
+        <button type="submit" class="trigger-btn" id="triggerBtn">
+          <span id="btnText">Trigger Webhook</span>
+        </button>
+      </form>
+
+      <div id="statusMessage" class="status-message"></div>
+    </div>
+
+    <div class="card recent-activity">
+      <h2><span class="card-icon">📊</span> Recent Activity</h2>
+      <div id="activityList">
+        <p style="color: #666; text-align: center; padding: 2rem;">No recent activity</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced authentication check with access protection
+    function checkAuthentication() {
+      const isAuthenticated = localStorage.getItem('isAuthenticated');
+      const userInfo = localStorage.getItem('userInfo');
+
+      // Strict authentication check
+      if (isAuthenticated !== 'true' || !userInfo) {
+        // Clear any invalid auth data
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('webhookActivity');
+
+        // Redirect to login
+        window.location.href = 'login.html';
+        return false;
+      }
+
+      // Additional check: verify user info is valid JSON
+      try {
+        JSON.parse(userInfo);
+      } catch (e) {
+        // Invalid user info, clear and redirect
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userInfo');
+        window.location.href = 'login.html';
+        return false;
+      }
+
+      return true;
+    }
+
+    // Run authentication check immediately
+    if (!checkAuthentication()) {
+      // Stop execution if not authenticated
+      throw new Error('Unauthorized access');
+    }
+
+    // Display user info
+    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    const welcomeText = document.getElementById('welcomeText');
+    if (userInfo.first_name) {
+      welcomeText.textContent = `Welcome, ${userInfo.first_name}!`;
+    } else if (userInfo.username) {
+      welcomeText.textContent = `Welcome, ${userInfo.username}!`;
+    }
+
+    // Load activity history
+    function loadActivity() {
+      const activity = JSON.parse(localStorage.getItem('webhookActivity') || '[]');
+      const activityList = document.getElementById('activityList');
+
+      if (activity.length === 0) {
+        activityList.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">No recent activity</p>';
+        return;
+      }
+
+      activityList.innerHTML = activity.map(item => `
+        <div class="activity-item">
+          <div>
+            <strong>${item.status}</strong> - ${item.url}
+            ${item.error ? `<br><small style="color: #dc2626;">${item.error}</small>` : ''}
+          </div>
+          <div class="activity-time">${new Date(item.timestamp).toLocaleString()}</div>
+        </div>
+      `).join('');
+    }
+
+    // Save activity
+    function saveActivity(url, status, error = null) {
+      const activity = JSON.parse(localStorage.getItem('webhookActivity') || '[]');
+      activity.unshift({
+        url,
+        status,
+        error,
+        timestamp: new Date().toISOString()
+      });
+      // Keep only last 10 items
+      activity.splice(10);
+      localStorage.setItem('webhookActivity', JSON.stringify(activity));
+      loadActivity();
+    }
+
+    // Show status message
+    function showStatus(message, type) {
+      const statusElement = document.getElementById('statusMessage');
+      statusElement.textContent = message;
+      statusElement.className = `status-message status-${type}`;
+      statusElement.style.display = 'block';
+
+      if (type !== 'loading') {
+        setTimeout(() => {
+          statusElement.style.display = 'none';
+        }, 5000);
+      }
+    }
+
+    // Logout handler
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('userInfo');
+      window.location.href = 'login.html';
+    });
+
+    // Webhook form handler
+    document.getElementById('webhookForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const url = document.getElementById('url').value.trim();
+      const pin = document.getElementById('pin').value;
+      const triggerBtn = document.getElementById('triggerBtn');
+      const btnText = document.getElementById('btnText');
+
+      // Validate inputs
+      if (!url || !pin) {
+        showStatus('Please fill in all fields', 'error');
+        return;
+      }
+
+      try {
+        // Update UI
+        triggerBtn.disabled = true;
+        btnText.textContent = 'Triggering...';
+        showStatus('Sending webhook request...', 'loading');
+
+        const webhookEndpoint = 'https://primary-production-7003.up.railway.app/webhook-test/social-content';
+
+        const response = await fetch(webhookEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url, pin })
+        });
+
+        if (response.ok) {
+          const result = await response.text();
+          showStatus('Webhook triggered successfully!', 'success');
+          saveActivity(url, 'Success');
+
+          // Clear form
+          document.getElementById('url').value = '';
+          document.getElementById('pin').value = '';
+        } else {
+          const errorText = await response.text();
+          throw new Error(`Server error: ${response.status} - ${errorText}`);
+        }
+
+      } catch (error) {
+        console.error('Webhook error:', error);
+        showStatus(`Failed to trigger webhook: ${error.message}`, 'error');
+        saveActivity(url, 'Failed', error.message);
+      } finally {
+        // Reset UI
+        triggerBtn.disabled = false;
+        btnText.textContent = 'Trigger Webhook';
+      }
+    });
+
+    // Load initial activity
+    loadActivity();
+
+    // Auto-clear status messages
+    setInterval(() => {
+      const statusElement = document.getElementById('statusMessage');
+      if (statusElement.style.display === 'block' && !statusElement.classList.contains('status-loading')) {
+        statusElement.style.display = 'none';
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

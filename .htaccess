@@ -1,0 +1,33 @@
+# Prevent direct access to sensitive pages
+<Files "login.html">
+    # Allow access only from same domain referrers
+    RewriteEngine On
+    RewriteCond %{HTTP_REFERER} !^https?://(.+\.)?yourdomain\.com [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(.+\.)?localhost [NC]
+    RewriteCond %{REQUEST_URI} !^/index\.html$ [NC]
+    RewriteCond %{REQUEST_URI} !^/$ [NC]
+    RewriteRule ^login\.html$ /index.html [R=302,L]
+</Files>
+
+<Files "dashboard.html">
+    # Block direct access to dashboard
+    RewriteEngine On
+    RewriteCond %{HTTP_REFERER} !^https?://(.+\.)?yourdomain\.com [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(.+\.)?localhost [NC]
+    RewriteRule ^dashboard\.html$ /index.html [R=302,L]
+</Files>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Cache control for static assets
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>

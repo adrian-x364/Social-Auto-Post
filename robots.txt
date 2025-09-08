@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /index.html
+Allow: /
+Disallow: /login.html
+Disallow: /dashboard.html
+Disallow: /home.html
+
+# Sitemap (optional)
+# Sitemap: https://yourdomain.com/sitemap.xml
